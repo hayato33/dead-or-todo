@@ -1,0 +1,270 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+
+# Dead-or-Todo アプリ開発ルール
+
+## 🎯 プロジェクト概要
+
+TODOアプリから始まり、自動アーカイブ機能を持つタスク管理アプリを段階的に開発する。
+現在のフェーズ: **MVP (実用最小限TODO)** - 3時間での完成を目標
+
+## 📚 技術スタック
+
+### フロントエンド
+
+- **フレームワーク**: Vue 3 (Composition API)
+- **言語**: TypeScript (厳密な型定義)
+- **状態管理**: 将来的にPinia導入予定（MVP段階では不要）
+- **ルーティング**: Vue Router
+- **UI**: TailwindCSS + 将来的にRadix Vue
+- **ビルドツール**: Vite
+
+### 開発ツール
+
+- **リンター**: ESLint
+- **フォーマッター**: Prettier
+- **テスト**: Vitest (単体) + Playwright (E2E) - 将来実装
+- **型チェック**: TypeScript Compiler
+
+### デプロイ・インフラ
+
+- **デプロイ**: AWS Amplify (早期デプロイ、CI/CD)
+- **データ保存**: localStorage (MVP) → 将来的にAWS RDS/DynamoDB
+- **認証**: 将来的にAWS Cognito
+- **バックエンド**: 将来的にFastAPI
+
+## 🚀 開発フェーズ
+
+### 現在: MVP フェーズ
+
+- 基本TODO機能（追加・表示・完了切替）
+- localStorage保存
+- TailwindCSSによるシンプルなスタイリング
+- Amplifyデプロイ
+
+### 段階拡張フェーズ
+
+- タスク編集・削除機能
+- カテゴリ管理
+- フィルタリング機能
+- 自動アーカイブ機能（12時間経過）
+- Pinia状態管理導入
+- Radix Vue コンポーネント導入
+
+### 将来構想フェーズ
+
+- FastAPI バックエンド
+- AWS Cognito認証
+- マルチユーザー対応
+- インフラ最適化（S3 + CloudFront）
+
+## 💻 コーディング規約
+
+### TypeScript
+
+- 厳密な型定義を必須とする
+- `any`型の使用は禁止（`unknown`を推奨）
+- インターフェースは`I`プレフィックスを避ける
+- 型定義は`types/`ディレクトリまたは各ファイル内で管理
+
+### Vue 3
+
+- Composition APIを使用（Options APIは使用しない）
+- `<script setup>`構文を推奨
+- Props/Emitsは`defineProps`/`defineEmits`で型定義
+- コンポーネント名はPascalCase
+
+### スタイリング
+
+- **TailwindCSS**を使用してスタイリング
+- カスタムCSSは最小限に抑制
+- レスポンシブデザインを考慮
+- ダークモード対応は将来実装
+
+### ファイル・ディレクトリ構成
+
+```
+src/
+├── components/          # 再利用可能なコンポーネント
+├── views/              # ページレベルのコンポーネント
+├── router/             # ルーティング設定
+├── stores/             # Pinia状態管理（将来実装）
+├── types/              # 型定義（将来実装）
+├── utils/              # ユーティリティ関数（将来実装）
+├── assets/             # 静的アセット
+├── App.vue             # ルートコンポーネント
+└── main.ts             # エントリーポイント
+```
+
+## 📝 ドキュメント要件
+
+### コメント規約
+
+- **TSDoc形式**でコメントを記載
+- 関数・クラス・インターフェースには必ずJSDocコメント
+- 複雑なロジックには説明コメント
+- TODOコメントには期限と担当者を記載
+
+### 例:
+
+```typescript
+/**
+ * タスクを追加する関数
+ * @param {string} title - タスクのタイトル
+ * @param {string} category - タスクのカテゴリ（オプショナル）
+ * @returns {Task} 作成されたタスクオブジェクト
+ */
+function addTask(title: string, category?: string): Task {
+  // TODO: バリデーション機能を追加 (2025/01/15 - 國分)
+  return {
+    id: generateId(),
+    title,
+    category: category || 'default',
+    completed: false,
+    createdAt: new Date(),
+  }
+}
+```
+
+## 🌿 ブランチ戦略
+
+### ブランチ命名規則
+
+- `feat/機能名` - 新機能開発
+- `fix/修正内容` - バグ修正
+- `docs/ドキュメント名` - ドキュメント更新
+- `refactor/対象` - リファクタリング
+- `test/テスト名` - テスト追加・修正
+
+### コミットメッセージ
+
+Conventional Commitsに従う:
+
+- `feat:` - 新機能
+- `fix:` - バグ修正
+- `docs:` - ドキュメント更新
+- `style:` - スタイル変更
+- `refactor:` - リファクタリング
+- `test:` - テスト関連
+- `chore:` - その他の変更
+
+## 🧪 テスト戦略（将来実装）
+
+### 単体テスト (Vitest)
+
+- コンポーネントのロジック部分
+- ユーティリティ関数
+- 状態管理（Pinia store）
+
+### E2Eテスト (Playwright)
+
+- ユーザーフロー全体
+- クリティカルパス
+- クロスブラウザテスト
+
+## 📦 依存関係管理
+
+### パッケージマネージャー
+
+- **pnpm**を使用
+- `package.json`の依存関係は最新の安定版を維持
+- セキュリティアップデートは定期的に実行
+
+### 新規依存関係追加
+
+- MVP段階では最小限に抑制
+- 追加時は必要性を十分に検討
+- ライセンス・メンテナンス状況を確認
+
+## 🔧 開発ワークフロー
+
+### MVP開発時の注意点
+
+1. **3時間での完成**を最優先
+2. **実用最小限**の機能に集中
+3. **完璧より動作**を重視
+4. **早期デプロイ**でフィードバック収集
+
+### コードレビュー観点
+
+- TypeScript型安全性
+- TailwindCSSの適切な使用
+- Vue 3 Composition APIのベストプラクティス
+- パフォーマンス（MVP段階では軽視可）
+- アクセシビリティ（将来実装で考慮）
+
+## 🚀 デプロイ戦略
+
+### MVP段階
+
+- **AWS Amplify**での自動デプロイ
+- `main`ブランチへのプッシュで本番デプロイ
+- GitHub Actions不要（Amplifyの機能を活用）
+
+### 将来のインフラ拡張
+
+- S3 + CloudFront構成への移行
+- FastAPIバックエンドのEC2/Lambda展開
+- RDS/DynamoDBデータベース統合
+
+## 🎨 UI/UX ガイドライン
+
+### デザインシステム
+
+- **TailwindCSS**のデフォルトデザインシステムを基本使用
+- 一貫したスペーシング（4px基準）
+- カラーパレットはTailwindの標準色を活用
+- フォントは`font-sans`（システムフォント）
+
+### レスポンシブ対応
+
+- モバイルファースト設計
+- ブレイクポイント: `sm:` `md:` `lg:` `xl:`
+- タッチフレンドリーなインターフェース
+
+### アクセシビリティ（将来実装）
+
+- セマンティックHTML
+- ARIA属性の適切な使用
+- キーボードナビゲーション
+- 色のコントラスト比準拠
+
+## 🔍 デバッグ・トラブルシューティング
+
+### 開発時のデバッグ
+
+- Vue DevToolsの活用
+- TypeScriptエラーの即座対応
+- ESLintエラーは必ず修正
+- コンソールエラーの撲滅
+
+### パフォーマンス監視（将来実装）
+
+- Viteのバンドル分析
+- Vue 3の`<Teleport>`活用
+- 遅延ローディング戦略
+
+## 📚 学習リソース
+
+### 公式ドキュメント
+
+- [Vue 3](https://vuejs.org/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [TailwindCSS](https://tailwindcss.com/)
+- [Vite](https://vitejs.dev/)
+- [AWS Amplify](https://docs.amplify.aws/)
+
+### 推奨記事・書籍
+
+- Vue 3 Composition APIの実践的な使用法
+- TailwindCSSのベストプラクティス
+- TypeScriptでのVue開発パターン
+
+---
+
+**更新日**: 2025年7月8日
+**対象フェーズ**: MVP
+**次回更新**: 段階拡張フェーズ移行時
